@@ -1,6 +1,6 @@
 # Custom Trait
 
-[Apple Doc]()
+[Unleash the UIKit trait system](https://developer.apple.com/videos/play/wwdc2023/10057/)
 
 ## Introduction traitCollection
 
@@ -83,6 +83,7 @@ like `traitColelction`, `traitOverrides` will be inherited to subviews/controlle
 ![Alt text](image-3.png)
 
 ```swift
+// set override
 self.traitOverrides.userInterfaceStyle = .dark
 self.traitOverrides.customTrait = true
 self.traitOverrides.themeTrait = .yellow
@@ -93,15 +94,19 @@ self.traitOverrides.remove(CustomTrait.self)
 
 ### Handling change
 
-`traitCollectionDidChange(_:)` is deprecated.
+`traitCollectionDidChange(_:)` is deprecated.  
+Why
 
-new APIs:
+* Too many traits
+* custom traits will invoke this method
+
+more accurate new APIs:
 
 ```swift
 // add register for traitCollection changes
 let reg = registerForTraitChanges([UITraitHorizontalSizeClass.self]) {
     (self: Self, previousTraitCollection: UITraitCollection) in
-    print("horizontal size class  updated")
+    // ...
 }
 registerForTraitChanges([UITraitUserInterfaceStyle.self, CustomTrait.self],
                         target: self, action: #selector(handleTraitChange))
@@ -110,7 +115,7 @@ registerForTraitChanges([UITraitUserInterfaceStyle.self, CustomTrait.self],
 unregisterForTraitChanges(reg)
 ```
 
-There are some predefined system traitCollections array.
+There are some predefined system unmutable traitCollections array.
 
 ```swift
 print(UITraitCollection.systemTraitsAffectingImageLookup)
@@ -180,9 +185,9 @@ class EmbedController {
     */
 ```
 
-## Conclusion
+## Recap
 
-### Maximize performance
-
-Only register for traits you depend on  
-Invalidate in response to changes  
+Better use `traitOverrides` instead of mutable `UITraitCollection`  
+Use `viewIsAppearing(_:)` instead of `viewWillAppear(_:)`  
+traits update will not be applied until `layoutSubviews()`  
+Use `registerForTraitChanges()` and only register for traits you depend on  
