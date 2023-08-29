@@ -2,20 +2,40 @@
 
 [Unleash the UIKit trait system](https://developer.apple.com/videos/play/wwdc2023/10057/)
 
-## Introduction traitCollection
+## Introduction of traitCollection
 
 Trait environments in your app are window scenes, windows, presentation controllers, view controllers, and views. Every one of these trait environments has its own trait collection, and each trait collection may contain different values.  
-![TraitCollection](image.png)
+![TraitEnvironment](image.png)
 
 Each trait environment inherits trait values from its parent environment.
 
-Before 17
+### Before iOS 17
+
+```swift
+// ios 16
+let legacyTraits = UITraitCollection(userInterfaceIdiom: .phone)
+print(legacyTraits.userInterfaceStyle)
+print(legacyTraits.horizontalSizeClass)
+print(legacyTraits.userInterfaceIdiom)
+
+//❌
+//legacyTraits.userInterfaceStyle = .unspecified
+
+// mutable
+self.window.overrideUserInterfaceStyle = .light
+```
+
+Before 17  
 ![Alt text](image-2.png)
 
-iOS 17
-![Alt text](image-1.png)
+### iOS 17
 
 ## Updates in iOS 17
+
+### inheritane update
+
+iOS 17  
+![Alt text](image-1.png)
 
 ### mubtaleTraits
 
@@ -37,7 +57,7 @@ let otherTraits = myTraits.modifyingTraits { mutableTraits in
 }
 ```
 
-### define cutom trait
+### define custom trait
 
 ```swift
 // Implemneting a simple custom trait
